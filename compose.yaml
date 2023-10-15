@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://pgusername:pgpassword@postgres:5432/databasename
+      - REDIS_URL=redis://redis:6379/0
+    restart: on-failure
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: databasename
+      POSTGRES_USER: pgusername
+      POSTGRES_PASSWORD: pgpassword
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
